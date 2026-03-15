@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SN Certif Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════════════════
+   CSS CUSTOM PROPERTIES — DARK (default)
+   ═══════════════════════════════════════════════════════ */
+:root {
+  --bg:         #070b12;
+  --bg2:        #0b1220;
+  --surface:    #0f1829;
+  --surface2:   #152035;
+  --surface3:   #1a2840;
+  --border:     #1e2e46;
+  --border2:    #243550;
+  --text:       #e2eaf8;
+  --text2:      #8499bb;
+  --text3:      #3d5272;
+  --accent:     #3b82f6;        /* override per certif */
+  --accent-dim: rgba(59,130,246,0.12);
+  --accent-glow:rgba(59,130,246,0.22);
+  --green:      #10b981;
+  --green-dim:  rgba(16,185,129,0.1);
+  --red:        #f43f5e;
+  --red-dim:    rgba(244,63,94,0.09);
+  --yellow:     #fbbf24;
+  --r:          14px;
+  --r-sm:       9px;
+  --font:       'Plus Jakarta Sans', sans-serif;
+  --mono:       'DM Mono', monospace;
+  --ease:       0.17s ease;
+  --shadow:     0 4px 24px rgba(0,0,0,0.45);
+}
+
+/* LIGHT THEME */
+body.light {
+  --bg:         #eef2fa;
+  --bg2:        #e4eaf5;
+  --surface:    #ffffff;
+  --surface2:   #f5f8ff;
+  --surface3:   #edf1fb;
+  --border:     #ccd6ec;
+  --border2:    #b0c2de;
+  --text:       #0c1829;
+  --text2:      #526285;
+  --text3:      #a8bed8;
+  --accent-dim: rgba(59,130,246,0.08);
+  --accent-glow:rgba(59,130,246,0.15);
+  --green-dim:  rgba(16,185,129,0.08);
+  --red-dim:    rgba(244,63,94,0.06);
+  --shadow:     0 4px 24px rgba(0,0,0,0.1);
+}
+
+/* ═══════════════════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { height: 100%; -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100%;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background .25s, color .25s;
+}
+
+/* Subtle grid texture */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(59,130,246,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,.025) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: .6;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCREENS
+   ═══════════════════════════════════════════════════════ */
+.scr { display: none; flex-direction: column; min-height: 100vh; }
+.scr.on { display: flex; }
+
+/* ═══════════════════════════════════════════════════════
+   NAV BAR
+   ═══════════════════════════════════════════════════════ */
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky; top:0; z-index: 100;
+}
+
+.nav-logo {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  letter-spacing: -.2px;
+}
+
+.nav-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
+  flex-shrink: 0;
+  transition: background .3s;
+}
+
+/* Certif Dropdown */
+.certif-dropdown {
+  flex: 1;
+  position: relative;
+}
+
+.dropdown-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 7px 11px;
+  cursor: pointer;
+  transition: border-color var(--ease), background var(--ease);
+  font-family: var(--font);
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dropdown-trigger:hover, .dropdown-trigger.open {
+  border-color: var(--accent);
+  background: var(--surface2);
+}
+
+.dt-icon { font-size: 17px; flex-shrink: 0; }
+.dt-text { flex: 1; text-align: left; }
+.dt-name { font-size: 13px; font-weight: 700; line-height: 1.2; }
+.dt-sub  { font-size: 10px; color: var(--text2); font-family: var(--mono); }
+.dt-arrow { font-size: 10px; color: var(--text3); flex-shrink: 0; transition: transform .2s; }
+.dropdown-trigger.open .dt-arrow { transform: rotate(180deg); }
+
+/* Dropdown Menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0; right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  z-index: 200;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+.dropdown-menu.open { display: block; animation: dropIn .15s ease; }
+
+@keyframes dropIn {
+  from { opacity:0; transform: translateY(-6px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+.dd-section-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text3);
+  padding: 10px 14px 4px;
+}
+
+.dd-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  cursor: pointer;
+  transition: background var(--ease);
+  border-bottom: 1px solid var(--border);
+}
+.dd-item:last-child { border-bottom: none; }
+.dd-item:hover { background: var(--surface2); }
+.dd-item.active { background: var(--accent-dim); }
+
+.dd-icon { font-size: 18px; flex-shrink: 0; }
+.dd-info { flex: 1; min-width: 0; }
+.dd-iname { font-size: 13px; font-weight: 700; color: var(--text); }
+.dd-idesc { font-size: 11px; color: var(--text2); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.dd-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.dd-badge.score {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--accent-glow);
+}
+
+.dd-badge.soon {
+  background: var(--surface3);
+  color: var(--text3);
+  border: 1px solid var(--border);
+}
+
+.dd-item.disabled { opacity: .4; cursor: default; pointer-events: none; }
+
+/* Nav right buttons */
+.nav-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+.nav-btn {
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--text2);
+  transition: all var(--ease);
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+/* ═══════════════════════════════════════════════════════
+   HOME SCREEN
+   ═══════════════════════════════════════════════════════ */
+.home-body {
+  flex: 1;
+  padding: 20px 16px 40px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.home-hero {
+  padding: 16px 0 24px;
+}
+
+.hero-greeting {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+
+.hero-title {
+  font-size: clamp(24px, 7vw, 34px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -.5px;
+}
+
+.hero-title .hl {
+  background: linear-gradient(125deg, var(--accent) 0%, var(--green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  color: var(--text2);
+  font-size: 13px;
+  margin-top: 8px;
+  font-family: var(--mono);
+}
+
+/* Section header */
+.sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+
+.sec-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text3);
+}
+
+/* Certif card (home) */
+.certif-cards { display: flex; flex-direction: column; gap: 9px; }
+
+.ccard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 15px 15px 15px 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--ease), border-color var(--ease), background var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ccard::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--ccolor, var(--accent));
+  border-radius: 3px 0 0 3px;
+}
+
+.ccard:hover {
+  border-color: var(--ccolor, var(--accent));
+  background: var(--surface2);
+  transform: translateX(2px);
+}
+
+.ccard-icon {
+  width: 44px; height: 44px;
+  border-radius: 11px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.ccard-info { flex: 1; min-width: 0; }
+.ccard-name { font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: -.2px; }
+.ccard-desc { font-size: 11px; color: var(--text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.ccard-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+.ccard-count { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+
+.ccard-score {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+.ccard-score.has { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-glow); }
+.ccard-score.none { background: transparent; color: var(--text3); border: 1px solid var(--border); }
+
+/* ═══════════════════════════════════════════════════════
+   QUIZ SCREEN
+   ═══════════════════════════════════════════════════════ */
+/* Top HUD */
+.quiz-hud {
+  padding: 10px 16px 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 80;
+}
+
+.hud-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.hud-left { display: flex; align-items: center; gap: 10px; }
+
+.hud-back {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all var(--ease);
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.hud-back:hover { border-color: var(--accent); color: var(--accent); }
+
+.hud-counter {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text2);
+}
+.hud-counter strong { color: var(--text); font-weight: 500; }
+
+.hud-right { display: flex; align-items: center; gap: 7px; }
+
+/* Timer */
+.hud-timer {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  transition: all .3s;
+  min-width: 58px;
+  text-align: center;
+}
+.hud-timer.warn  { color: var(--yellow); border-color: rgba(251,191,36,.3); background: rgba(251,191,36,.06); }
+.hud-timer.danger{ color: var(--red);    border-color: rgba(244,63,94,.3);  background: rgba(244,63,94,.07);  animation: pulse .8s infinite; }
+
+@keyframes pulse {
+  0%,100% { opacity:1; }
+  50%      { opacity:.6; }
+}
+
+.hud-score {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--accent-glow);
+}
+
+/* Fav button in hud */
+.hud-fav {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.hud-fav:hover { border-color: var(--yellow); }
+.hud-fav.on { background: rgba(251,191,36,.1); border-color: rgba(251,191,36,.4); }
+
+/* Progress bar */
+.hud-progress {
+  height: 3px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.hud-bar {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  transition: width .4s cubic-bezier(.4,0,.2,1);
+}
+
+/* Quiz body */
+.quiz-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px 16px 120px;
+}
+
+/* Question card */
+.qcard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 18px 18px 16px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.qcard::after {
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  border-radius: var(--r) var(--r) 0 0;
+}
+
+.q-topic {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  opacity: .8;
+  margin-bottom: 9px;
+}
+
+.q-text {
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.q-badge {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-glow);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+/* Options */
+.opts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+
+.opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 12px 13px;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font);
+  width: 100%;
+  transition: border-color var(--ease), background var(--ease), transform var(--ease);
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+.opt:hover:not(:disabled):not(.locked) {
+  border-color: var(--accent);
+  background: rgba(59,130,246,.05);
+}
+
+.opt:disabled, .opt.locked { cursor: default; }
+
+.opt-ltr {
+  width: 27px; height: 27px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  background: var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--text2);
+  margin-top: 1px;
+  transition: all var(--ease);
+}
+
+.opt-txt {
+  flex: 1;
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.55;
+  font-weight: 500;
+}
+
+.opt-chk {
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 14px;
+  color: transparent;
+  transition: color var(--ease);
+}
+
+/* Option states */
+.opt.sel { border-color: var(--accent); background: rgba(59,130,246,.06); }
+.opt.sel .opt-ltr { background: var(--accent); color: #fff; }
+.opt.sel .opt-chk { color: var(--accent); }
+
+.opt.rev { border-color: rgba(16,185,129,.35); background: rgba(16,185,129,.04); }
+.opt.rev .opt-ltr { background: rgba(16,185,129,.15); color: var(--green); }
+
+.opt.correct { border-color: var(--green) !important; background: var(--green-dim) !important; }
+.opt.correct .opt-ltr { background: var(--green) !important; color: #fff !important; }
+
+.opt.wrong { border-color: var(--red) !important; background: var(--red-dim) !important; }
+.opt.wrong .opt-ltr { background: var(--red) !important; color: #fff !important; }
+
+/* Feedback */
+.feedback {
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  display: none;
+  gap: 10px;
+  align-items: flex-start;
+  animation: fadeUp .18s ease;
+}
+.feedback.show { display: flex; }
+.feedback.ok { background: var(--green-dim); border: 1px solid rgba(16,185,129,.22); color: var(--green); }
+.feedback.ko { background: var(--red-dim);   border: 1px solid rgba(244,63,94,.2);  color: #fb7185; }
+
+.fb-ico { font-size: 17px; flex-shrink: 0; }
+.fb-msg strong { display:block; font-size:13.5px; font-weight:700; }
+.fb-msg small   { font-family:var(--mono); font-size:10.5px; opacity:.85; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(-5px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* Action bar */
+.action-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 10px 16px env(safe-area-inset-bottom, 14px);
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  z-index: 80;
+}
+
+/* Buttons */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: var(--r);
+  font-family: var(--font);
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: -.1px;
+  transition: all var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(.98); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 3px 14px var(--accent-glow);
+}
+.btn-primary:hover { filter: brightness(1.1); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { border-color: var(--border2); color: var(--text); }
+
+.btn-exit {
+  background: transparent;
+  color: var(--red);
+  border: 1px solid rgba(244,63,94,.2);
+  font-size: 13px;
+  padding: 10px;
+}
+.btn-exit:hover { background: var(--red-dim); }
+
+.btn-green {
+  background: var(--green);
+  color: #fff;
+  box-shadow: 0 3px 14px rgba(16,185,129,.25);
+}
+
+/* Hide util */
+.hide { display: none !important; }
+
+/* ═══════════════════════════════════════════════════════
+   RESULTS SCREEN
+   ═══════════════════════════════════════════════════════ */
+.results-body {
+  flex: 1;
+  padding: 24px 16px 120px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.res-hero { text-align:center; margin-bottom:28px; }
+
+.ring-wrap {
+  position: relative;
+  width: 144px; height: 144px;
+  margin: 0 auto 20px;
+}
+.ring-wrap svg {
+  position: absolute; top:0; left:0;
+  transform: rotate(-90deg);
+}
+.ring-inner {
+  position: absolute; inset:0;
+  display: flex; flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.ring-pct {
+  font-family: var(--mono);
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1;
+}
+.ring-lbl {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--text2);
+  margin-top: 2px;
+}
+
+.res-title { font-size:21px; font-weight:800; margin-bottom:5px; }
+.res-sub   { color:var(--text2); font-size:12px; font-family:var(--mono); }
+
+.res-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.res-col {
+  padding: 16px 10px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+.res-col:last-child { border-right:none; }
+.res-val { font-family:var(--mono); font-size:26px; font-weight:400; line-height:1; }
+.res-val.g { color:var(--green); }
+.res-val.r { color:var(--red); }
+.res-val.b { color:var(--accent); }
+.res-lbl { font-size:10px; color:var(--text2); font-family:var(--mono); text-transform:uppercase; letter-spacing:1.5px; margin-top:4px; }
+
+.res-actions { display:flex; flex-direction:column; gap:8px; }
+
+/* ═══════════════════════════════════════════════════════
+   SETTINGS PANEL (slide-up modal)
+   ═══════════════════════════════════════════════════════ */
+.modal-overlay {
+  display: none;
+  position: fixed; inset:0; z-index:300;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  align-items: flex-end;
+  justify-content: center;
+}
+.modal-overlay.open { display:flex; animation: overlayIn .18s ease; }
+@keyframes overlayIn { from{opacity:0} to{opacity:1} }
+
+.modal-sheet {
+  width: 100%; max-width: 640px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-bottom: none;
+  border-radius: 20px 20px 0 0;
+  padding: 0 0 env(safe-area-inset-bottom,24px);
+  animation: sheetUp .22s cubic-bezier(.4,0,.2,1);
+  max-height: 85vh;
+  overflow-y: auto;
+}
+@keyframes sheetUp {
+  from{transform:translateY(30px);opacity:0}
+  to  {transform:translateY(0);opacity:1}
+}
+
+.sheet-handle {
+  width: 36px; height: 4px;
+  background: var(--border2);
+  border-radius: 2px;
+  margin: 10px auto 0;
+}
+
+.sheet-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 14px 18px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.sheet-title { font-size:15px; font-weight:800; }
+.sheet-close {
+  width:30px;height:30px;
+  border-radius:8px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:14px;
+}
+
+.sheet-body { padding:16px 18px; display:flex; flex-direction:column; gap:20px; }
+
+.setting-row {
+  display:flex; align-items:center; gap:12px;
+  justify-content:space-between;
+}
+.setting-label { font-size:14px; font-weight:600; color:var(--text); }
+.setting-sub   { font-size:11px; color:var(--text2); font-family:var(--mono); margin-top:2px; }
+
+/* Toggle switch */
+.toggle {
+  width:46px;height:26px;
+  border-radius:13px;
+  background:var(--border2);
+  border:none;cursor:pointer;
+  position:relative;
+  transition:background .2s;
+  flex-shrink:0;
+}
+.toggle::after {
+  content:'';
+  position:absolute;
+  top:3px;left:3px;
+  width:20px;height:20px;
+  border-radius:50%;
+  background:#fff;
+  transition:transform .2s, background .2s;
+}
+.toggle.on { background:var(--accent); }
+.toggle.on::after { transform:translateX(20px); }
+
+/* Mode selector in sheet */
+.mode-chips {
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+.mode-chip {
+  padding:7px 13px;
+  border-radius:20px;
+  background:var(--surface2);
+  border:1.5px solid var(--border);
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+  color:var(--text2);
+  transition:all var(--ease);
+  -webkit-tap-highlight-color:transparent;
+}
+.mode-chip:hover { border-color:var(--accent); color:var(--accent); }
+.mode-chip.active { background:var(--accent-dim); border-color:var(--accent); color:var(--accent); }
+
+/* Timer options */
+.timer-opts {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+}
+.t-opt {
+  padding:8px 4px;
+  border-radius:var(--r-sm);
+  background:var(--surface2);
+  border:1.5px solid var(--border);
+  cursor:pointer;
+  font-family:var(--mono);
+  font-size:12px;
+  text-align:center;
+  color:var(--text2);
+  transition:all var(--ease);
+  -webkit-tap-highlight-color:transparent;
+}
+.t-opt:hover { border-color:var(--accent); color:var(--accent); }
+.t-opt.active { background:var(--accent-dim); border-color:var(--accent); color:var(--accent); }
+
+/* Stats table */
+.stats-table {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+.stat-row {
+  display:flex; align-items:center; gap:10px;
+  padding:11px 13px;
+  border-bottom:1px solid var(--border);
+}
+.stat-row:last-child { border-bottom:none; }
+.stat-row-icon { font-size:18px; flex-shrink:0; }
+.stat-row-info { flex:1; }
+.stat-row-name  { font-size:13px; font-weight:600; color:var(--text); }
+.stat-row-sub   { font-size:10px; color:var(--text2); font-family:var(--mono); }
+.stat-row-val   { font-family:var(--mono); font-size:13px; font-weight:500; color:var(--accent); }
+
+/* Favorites list */
+.fav-list { display:flex; flex-direction:column; gap:8px; }
+.fav-item {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  padding:11px 13px;
+  display:flex; gap:10px; align-items:flex-start;
+}
+.fav-num {
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text3);
+  margin-top:2px;
+  flex-shrink:0;
+}
+.fav-text { font-size:12.5px; color:var(--text); line-height:1.5; flex:1; font-weight:500; }
+.fav-go {
+  font-size:12px;color:var(--accent);cursor:pointer;
+  flex-shrink:0; margin-top:2px;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.empty-state {
+  text-align:center;
+  padding:30px 16px;
+  color:var(--text2);
+  font-family:var(--mono);
+  font-size:12px;
+}
+.empty-state .big { font-size:32px; display:block; margin-bottom:8px; }
+
+/* ═══════════════════════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════════════════════ */
+.toast {
+  position:fixed;
+  bottom:90px; left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--surface);
+  border:1px solid var(--border2);
+  color:var(--text);
+  padding:9px 18px;
+  border-radius:30px;
+  font-family:var(--mono);
+  font-size:12.5px;
+  white-space:nowrap;
+  z-index:999;
+  pointer-events:none;
+  opacity:0;
+  transition:all .25s ease;
+  box-shadow:var(--shadow);
+  max-width:90vw;
+  text-align:center;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+</style>
+</head>
+<body>
+
+<div id="root">
+
+  <!-- ╔══════════════════════════════════════╗
+       ║  SHARED NAV BAR                      ║
+       ╚══════════════════════════════════════╝ -->
+  <div class="navbar" id="navbar">
+    <div class="nav-logo">
+      <div class="nav-dot" id="navDot"></div>
+      SN Prep
+    </div>
+
+    <!-- Certif Dropdown -->
+    <div class="certif-dropdown" id="certifDropdown">
+      <button class="dropdown-trigger" id="dropTrigger" onclick="toggleDropdown()">
+        <span class="dt-icon" id="dtIcon">📋</span>
+        <div class="dt-text">
+          <div class="dt-name" id="dtName">Choisir une certification</div>
+          <div class="dt-sub" id="dtSub">— questions</div>
+        </div>
+        <span class="dt-arrow">▼</span>
+      </button>
+      <div class="dropdown-menu" id="dropMenu"></div>
+    </div>
+
+    <div class="nav-actions">
+      <button class="nav-btn" id="favNavBtn" onclick="openSheet('favs')" title="Favoris">☆</button>
+      <button class="nav-btn" id="settingsBtn" onclick="openSheet('settings')" title="Paramètres">⚙</button>
+      <button class="nav-btn" id="themeBtn" onclick="toggleTheme()" title="Thème">🌙</button>
+    </div>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════════╗
+       ║  SCREEN: HOME                        ║
+       ╚══════════════════════════════════════╝ -->
+  <div id="scrHome" class="scr on">
+    <div class="home-body">
+      <div class="home-hero">
+        <div class="hero-greeting">Bienvenue</div>
+        <h1 class="hero-title">ServiceNow<br><span class="hl">Certif Prep</span></h1>
+        <p class="hero-sub" id="heroSub">Chargement des certifs…</p>
+      </div>
+
+      <div class="sec-head">
+        <div class="sec-label">Certifications disponibles</div>
+      </div>
+      <div class="certif-cards" id="certifCards"></div>
+
+      <div class="sec-head" style="margin-top:28px;">
+        <div class="sec-label">Prochainement</div>
+      </div>
+      <div class="certif-cards" id="soonCards"></div>
+    </div>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════════╗
+       ║  SCREEN: QUIZ                        ║
+       ╚══════════════════════════════════════╝ -->
+  <div id="scrQuiz" class="scr">
+    <!-- HUD -->
+    <div class="quiz-hud">
+      <div class="hud-row">
+        <div class="hud-left">
+          <div class="hud-back" id="hudBack" onclick="confirmExit()">←</div>
+          <div class="hud-counter">
+            Q <strong id="hudQNum">1</strong>/<span id="hudQTotal">1</span>
+          </div>
+        </div>
+        <div class="hud-right">
+          <div class="hud-timer hide" id="hudTimer">00:00</div>
+          <div class="hud-score">✓ <span id="hudScore">0</span></div>
+          <div class="hud-fav" id="hudFav" onclick="toggleFav()" title="Marquer">☆</div>
+        </div>
+      </div>
+      <div class="hud-progress">
+        <div class="hud-bar" id="hudBar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="quiz-body" id="quizBody">
+      <div class="qcard">
+        <div class="q-topic" id="qTopic">TOPIC</div>
+        <div class="q-text"  id="qText">…</div>
+        <div class="q-badge hide" id="qBadge">⬜ Sélectionner N réponses</div>
+      </div>
+
+      <div class="opts" id="optsList"></div>
+
+      <div class="feedback" id="feedback">
+        <div class="fb-ico" id="fbIco"></div>
+        <div class="fb-msg" id="fbMsg"></div>
+      </div>
+    </div>
+
+    <!-- Action bar (fixed bottom) -->
+    <div class="action-bar" id="actionBar">
+      <button class="btn btn-primary" id="btnValidate" onclick="validate()">Valider la réponse</button>
+      <button class="btn btn-ghost   hide" id="btnNext"     onclick="next()">Question suivante →</button>
+      <button class="btn btn-exit"          id="btnExit"     onclick="confirmExit()">⬅ Quitter le quiz</button>
+    </div>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════════╗
+       ║  SCREEN: RESULTS                     ║
+       ╚══════════════════════════════════════╝ -->
+  <div id="scrResults" class="scr">
+    <div class="results-body">
+      <div class="res-hero">
+        <div class="ring-wrap">
+          <svg width="144" height="144" viewBox="0 0 144 144">
+            <circle cx="72" cy="72" r="62" fill="none" stroke="var(--border)" stroke-width="9"/>
+            <circle id="resArc" cx="72" cy="72" r="62" fill="none"
+              stroke="var(--green)" stroke-width="9" stroke-linecap="round"
+              stroke-dasharray="389.6" stroke-dashoffset="389.6"/>
+          </svg>
+          <div class="ring-inner">
+            <div class="ring-pct" id="resPct">—</div>
+            <div class="ring-lbl">Score</div>
+          </div>
+        </div>
+        <div class="res-title" id="resTitle">—</div>
+        <div class="res-sub"   id="resSub">—</div>
+      </div>
+
+      <div class="res-grid">
+        <div class="res-col"><div class="res-val g" id="resC">0</div><div class="res-lbl">Correct</div></div>
+        <div class="res-col"><div class="res-val r" id="resW">0</div><div class="res-lbl">Incorrect</div></div>
+        <div class="res-col"><div class="res-val b" id="resT">0</div><div class="res-lbl">Total</div></div>
+      </div>
+
+      <div class="res-actions">
+        <button class="btn btn-primary" onclick="startQuiz()">↺ Recommencer</button>
+        <button class="btn btn-ghost"   onclick="replayErrors()">⚡ Réviser les erreurs</button>
+        <button class="btn btn-ghost"   onclick="show('scrHome')">⌂ Accueil</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /root -->
+
+
+<!-- ╔══════════════════════════════════════════════════════╗
+     ║  SETTINGS / STATS / FAVS SHEET                      ║
+     ╚══════════════════════════════════════════════════════╝ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeSheet(event)">
+  <div class="modal-sheet" id="modalSheet" onclick="e=>e.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <div class="sheet-title" id="sheetTitle">Paramètres</div>
+      <div class="sheet-close" onclick="closeSheet()">✕</div>
+    </div>
+    <div class="sheet-body" id="sheetBody"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     DATA FILES — Ajouter un <script src="data_XXX.js"> ici
+     pour chaque nouvelle certification
+     ═══════════════════════════════════════════════════════ -->
+<script src="data_cis_df.js"></script>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     APP ENGINE
+     ═══════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+/* ─── COMING SOON LIST ─── */
+const COMING_SOON = [
+  { shortName:'CIS-ITSM', name:'CIS — IT Service Mgmt',  icon:'🎫', desc:'Incident, Problem, Change, Request' },
+  { shortName:'CIS-HR',   name:'CIS — HR Service Delivery',icon:'👥', desc:'Human Resources modules' },
+  { shortName:'CIS-CSM',  name:'CIS — Customer Service', icon:'💬', desc:'Customer Service Management' },
+  { shortName:'CAD',      name:'Certified App Developer',icon:'⚙️', desc:'Application development on SN' },
+  { shortName:'CSA',      name:'Certified Sys Admin',    icon:'🖥️', desc:'Platform administration' },
+];
+
+/* ─── APP STATE ─── */
+const S = {
+  certifId:  null,
+  mode:      'exam',       // exam | review | shuffle | mistakes
+  timerOn:   false,
+  timerSecs: 60,           // per question
+  timerLeft: 0,
+  timerRef:  null,
+  questions: [],
+  idx:       0,
+  score:     0,
+  answered:  0,
+  selected:  [],
+  locked:    false,
+  mistakes:  [],           // q.id wrong this session
+  favs:      {},           // { certifId: Set<q.id> }
+};
+
+/* ─── STORAGE ─── */
+const sk = (c,k) => `snq_${c}_${k}`;
+
+function getStat(c) {
+  return {
+    best:     localStorage.getItem(sk(c,'best')),
+    attempts: +( localStorage.getItem(sk(c,'attempts')) || 0 ),
+    errors:   JSON.parse( localStorage.getItem(sk(c,'errors')) || '[]' ),
+  };
+}
+
+function saveStat(c, score, total) {
+  const pct = Math.round(score/total*100);
+  const old = localStorage.getItem(sk(c,'best'));
+  if (!old || pct > +old) localStorage.setItem(sk(c,'best'), pct);
+  localStorage.setItem(sk(c,'attempts'), getStat(c).attempts + 1);
+}
+
+function pushErrors(c, ids) {
+  const ex = JSON.parse(localStorage.getItem(sk(c,'errors')) || '[]');
+  localStorage.setItem(sk(c,'errors'), JSON.stringify([...new Set([...ex,...ids])]));
+}
+
+function clearErrors(c) { localStorage.removeItem(sk(c,'errors')); }
+
+function loadFavs(c) {
+  if (!S.favs[c]) {
+    const raw = JSON.parse(localStorage.getItem(sk(c,'favs')) || '[]');
+    S.favs[c] = new Set(raw);
+  }
+  return S.favs[c];
+}
+
+function saveFavs(c) {
+  localStorage.setItem(sk(c,'favs'), JSON.stringify([...S.favs[c]]));
+}
+
+function isFav(qId) { return loadFavs(S.certifId).has(qId); }
+
+function toggleFav() {
+  const q = S.questions[S.idx];
+  const set = loadFavs(S.certifId);
+  if (set.has(q.id)) { set.delete(q.id); toast('☆ Retiré des favoris'); }
+  else               { set.add(q.id);    toast('★ Ajouté aux favoris'); }
+  saveFavs(S.certifId);
+  updateFavBtn();
+}
+
+function updateFavBtn() {
+  const q = S.questions[S.idx];
+  if (!q) return;
+  const btn = document.getElementById('hudFav');
+  const on  = isFav(q.id);
+  btn.textContent = on ? '★' : '☆';
+  btn.classList.toggle('on', on);
+  // update fav nav badge
+  document.getElementById('favNavBtn').textContent = on ? '★' : '☆';
+}
+
+/* ─── THEME ─── */
+function initTheme() {
+  if (localStorage.getItem('snq_theme') === 'light') applyTheme('light');
+  else applyTheme('dark');
+}
+
+function applyTheme(t) {
+  document.body.classList.toggle('light', t === 'light');
+  localStorage.setItem('snq_theme', t);
+  const isLight = t === 'light';
+  document.getElementById('themeBtn').textContent = isLight ? '☀️' : '🌙';
+}
+
+function toggleTheme() {
+  applyTheme(document.body.classList.contains('light') ? 'dark' : 'light');
+}
+
+/* ─── SCREEN NAVIGATION ─── */
+function show(id) {
+  document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+
+/* ─── CERTIF ACCENT COLOR ─── */
+function applyAccent(color) {
+  document.documentElement.style.setProperty('--accent',      color);
+  document.documentElement.style.setProperty('--accent-dim',  hexAlpha(color,.12));
+  document.documentElement.style.setProperty('--accent-glow', hexAlpha(color,.22));
+  document.getElementById('navDot').style.background = color;
+  document.getElementById('navDot').style.boxShadow = `0 0 10px ${hexAlpha(color,.5)}`;
+}
+
+function hexAlpha(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+/* ─── DROPDOWN ─── */
+function buildDropdown() {
+  const menu = document.getElementById('dropMenu');
+  menu.innerHTML = '';
+
+  const avail = Object.values(window.CERTIF_DATA || {});
+
+  if (avail.length) {
+    const lbl = document.createElement('div');
+    lbl.className = 'dd-section-label';
+    lbl.textContent = 'Disponible';
+    menu.appendChild(lbl);
+
+    avail.forEach(c => {
+      const stats = getStat(c.id);
+      const item  = document.createElement('div');
+      item.className = 'dd-item' + (S.certifId === c.id ? ' active' : '');
+      item.innerHTML = `
+        <div class="dd-icon">${c.icon}</div>
+        <div class="dd-info">
+          <div class="dd-iname">${c.shortName}</div>
+          <div class="dd-idesc">${c.description}</div>
+        </div>
+        <div class="dd-badge score">${stats.best ? stats.best+'%' : c.questions.length+' Q'}</div>
+      `;
+      item.onclick = () => { selectCertif(c.id); closeDropdown(); };
+      menu.appendChild(item);
+    });
+  }
+
+  // Coming soon
+  const soonLabel = document.createElement('div');
+  soonLabel.className = 'dd-section-label';
+  soonLabel.textContent = 'Prochainement';
+  menu.appendChild(soonLabel);
+
+  COMING_SOON.filter(cs => !avail.find(a => a.shortName === cs.shortName)).forEach(cs => {
+    const item = document.createElement('div');
+    item.className = 'dd-item disabled';
+    item.innerHTML = `
+      <div class="dd-icon">${cs.icon}</div>
+      <div class="dd-info">
+        <div class="dd-iname">${cs.shortName}</div>
+        <div class="dd-idesc">${cs.desc}</div>
+      </div>
+      <div class="dd-badge soon">bientôt</div>
+    `;
+    menu.appendChild(item);
+  });
+}
+
+function toggleDropdown() {
+  const trigger = document.getElementById('dropTrigger');
+  const menu    = document.getElementById('dropMenu');
+  buildDropdown();
+  const open = menu.classList.toggle('open');
+  trigger.classList.toggle('open', open);
+  if (open) document.addEventListener('click', outsideDropdown, true);
+}
+
+function closeDropdown() {
+  document.getElementById('dropMenu').classList.remove('open');
+  document.getElementById('dropTrigger').classList.remove('open');
+  document.removeEventListener('click', outsideDropdown, true);
+}
+
+function outsideDropdown(e) {
+  if (!document.getElementById('certifDropdown').contains(e.target)) closeDropdown();
+}
+
+function selectCertif(id) {
+  const c = window.CERTIF_DATA[id];
+  if (!c) return;
+  S.certifId = id;
+  // update trigger display
+  document.getElementById('dtIcon').textContent = c.icon;
+  document.getElementById('dtName').textContent = c.shortName;
+  document.getElementById('dtSub').textContent  = `${c.questions.length} questions`;
+  applyAccent(c.color || '#3b82f6');
+  buildHome();
+  show('scrHome');
+}
+
+/* ─── HOME ─── */
+function buildHome() {
+  const avail  = Object.values(window.CERTIF_DATA || {});
+  const total  = avail.reduce((a,c) => a + c.questions.length, 0);
+  document.getElementById('heroSub').textContent =
+    `${avail.length} certif${avail.length>1?'s':''} · ${total} questions`;
+
+  // Available cards
+  const cardsEl = document.getElementById('certifCards');
+  cardsEl.innerHTML = '';
+  avail.forEach(c => {
+    const st = getStat(c.id);
+    const card = document.createElement('div');
+    card.className = 'ccard';
+    card.style.setProperty('--ccolor', c.color || 'var(--accent)');
+    card.innerHTML = `
+      <div class="ccard-icon">${c.icon}</div>
+      <div class="ccard-info">
+        <div class="ccard-name">${c.name}</div>
+        <div class="ccard-desc">${c.description}</div>
+      </div>
+      <div class="ccard-right">
+        <div class="ccard-count">${c.questions.length} Q</div>
+        <div class="ccard-score ${st.best?'has':'none'}">${st.best ? st.best+'%' : '—'}</div>
+      </div>
+    `;
+    card.onclick = () => { selectCertif(c.id); openSheet('settings'); };
+    cardsEl.appendChild(card);
+  });
+
+  // Coming soon
+  const soonEl = document.getElementById('soonCards');
+  soonEl.innerHTML = '';
+  COMING_SOON.filter(cs => !avail.find(a => a.shortName === cs.shortName)).forEach(cs => {
+    const card = document.createElement('div');
+    card.className = 'ccard';
+    card.style.setProperty('--ccolor', '#3d5272');
+    card.style.opacity = '.38';
+    card.style.pointerEvents = 'none';
+    card.innerHTML = `
+      <div class="ccard-icon">${cs.icon}</div>
+      <div class="ccard-info">
+        <div class="ccard-name">${cs.shortName}</div>
+        <div class="ccard-desc">${cs.name}</div>
+      </div>
+      <div class="ccard-right">
+        <div class="ccard-score none">bientôt</div>
+      </div>
+    `;
+    soonEl.appendChild(card);
+  });
+
+  // Auto-select first certif if none selected
+  if (!S.certifId && avail.length) selectCertif(avail[0].id);
+}
+
+/* ─── SETTINGS SHEET ─── */
+function openSheet(type) {
+  const overlay = document.getElementById('modalOverlay');
+  const title   = document.getElementById('sheetTitle');
+  const body    = document.getElementById('sheetBody');
+  overlay.classList.add('open');
+
+  if (type === 'settings') {
+    title.textContent = '⚙ Paramètres & Démarrer';
+    body.innerHTML = buildSettingsHTML();
+    syncSettingsUI();
+  } else if (type === 'stats') {
+    title.textContent = '📊 Statistiques';
+    body.innerHTML = buildStatsHTML();
+  } else if (type === 'favs') {
+    title.textContent = '★ Favoris';
+    body.innerHTML = buildFavsHTML();
+  }
+}
+
+function closeSheet(e) {
+  if (e && e.target !== document.getElementById('modalOverlay')) return;
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+/* Settings HTML */
+function buildSettingsHTML() {
+  const c = window.CERTIF_DATA[S.certifId];
+  const certName = c ? c.shortName : '—';
+  return `
+  <div>
+    <div style="font-size:11px;color:var(--text2);font-family:var(--mono);margin-bottom:8px;text-transform:uppercase;letter-spacing:1.5px;">Certification active</div>
+    <div style="font-size:14px;font-weight:700;color:var(--text);">${certName}</div>
+  </div>
+
+  <div>
+    <div style="font-size:11px;color:var(--text2);font-family:var(--mono);margin-bottom:10px;text-transform:uppercase;letter-spacing:1.5px;">Mode</div>
+    <div class="mode-chips">
+      <div class="mode-chip ${S.mode==='exam'    ?'active':''}" onclick="setMode('exam',this)">🎯 Examen</div>
+      <div class="mode-chip ${S.mode==='review'  ?'active':''}" onclick="setMode('review',this)">📖 Révision</div>
+      <div class="mode-chip ${S.mode==='shuffle' ?'active':''}" onclick="setMode('shuffle',this)">🔀 Aléatoire</div>
+      <div class="mode-chip ${S.mode==='mistakes'?'active':''}" onclick="setMode('mistakes',this)">⚡ Erreurs</div>
+    </div>
+  </div>
+
+  <div class="setting-row">
+    <div>
+      <div class="setting-label">⏱ Timer</div>
+      <div class="setting-sub">Temps limite par question</div>
+    </div>
+    <button class="toggle ${S.timerOn?'on':''}" id="toggleTimer" onclick="toggleTimerOpt()"></button>
+  </div>
+
+  <div id="timerOptsWrap" style="${S.timerOn?'':'display:none'}">
+    <div style="font-size:11px;color:var(--text2);font-family:var(--mono);margin-bottom:8px;text-transform:uppercase;letter-spacing:1.5px;">Secondes par question</div>
+    <div class="timer-opts">
+      ${[30,60,90,120].map(s=>`<div class="t-opt ${S.timerSecs===s?'active':''}" onclick="setTimer(${s},this)">${s}s</div>`).join('')}
+    </div>
+  </div>
+
+  <div style="display:flex;gap:9px;padding-top:6px;">
+    <button class="btn btn-green" style="flex:2" onclick="doStart()">▶ Commencer</button>
+    <button class="btn btn-ghost" style="flex:1;font-size:12px;" onclick="openSheet('stats')">📊 Stats</button>
+  </div>
+  `;
+}
+
+function syncSettingsUI() {}
+
+function setMode(m, el) {
+  S.mode = m;
+  document.querySelectorAll('.mode-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toggleTimerOpt() {
+  S.timerOn = !S.timerOn;
+  document.getElementById('toggleTimer').classList.toggle('on', S.timerOn);
+  document.getElementById('timerOptsWrap').style.display = S.timerOn ? '' : 'none';
+}
+
+function setTimer(s, el) {
+  S.timerSecs = s;
+  document.querySelectorAll('.t-opt').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function doStart() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  startQuiz();
+}
+
+/* Stats HTML */
+function buildStatsHTML() {
+  const avail = Object.values(window.CERTIF_DATA || {});
+  if (!avail.length) return '<div class="empty-state"><span class="big">📊</span>Aucune certif chargée.</div>';
+  return `
+  <div class="stats-table">
+    ${avail.map(c => {
+      const st = getStat(c.id);
+      return `
+      <div class="stat-row">
+        <div class="stat-row-icon">${c.icon}</div>
+        <div class="stat-row-info">
+          <div class="stat-row-name">${c.shortName}</div>
+          <div class="stat-row-sub">${c.questions.length} Q · ${st.attempts} tentative${st.attempts!==1?'s':''} · ${st.errors.length} erreur${st.errors.length!==1?'s':''}</div>
+        </div>
+        <div class="stat-row-val">${st.best ? st.best+'%' : '—'}</div>
+      </div>`;
+    }).join('')}
+  </div>
+  <button class="btn btn-ghost" style="font-size:12px;margin-top:4px;" onclick="resetAllStats()">🗑 Réinitialiser les stats</button>
+  `;
+}
+
+function resetAllStats() {
+  if (!confirm('Réinitialiser toutes les statistiques ?')) return;
+  Object.keys(window.CERTIF_DATA||{}).forEach(id => {
+    ['best','attempts','errors','favs'].forEach(k => localStorage.removeItem(sk(id,k)));
+  });
+  S.favs = {};
+  document.getElementById('modalOverlay').classList.remove('open');
+  buildHome();
+  toast('✅ Stats réinitialisées');
+}
+
+/* Favs HTML */
+function buildFavsHTML() {
+  if (!S.certifId) return '<div class="empty-state"><span class="big">★</span>Sélectionnez une certif d\'abord.</div>';
+  const c   = window.CERTIF_DATA[S.certifId];
+  const set = loadFavs(S.certifId);
+  const qs  = c.questions.filter(q => set.has(q.id));
+  if (!qs.length) return '<div class="empty-state"><span class="big">☆</span>Aucun favori pour cette certif.<br>Marquez des questions avec ★ pendant le quiz.</div>';
+  return `
+  <div class="fav-list">
+    ${qs.map(q => `
+    <div class="fav-item">
+      <div class="fav-num">#${q.id}</div>
+      <div class="fav-text">${q.text.split('\n')[0].slice(0,90)}${q.text.length>90?'…':''}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+/* ─── START QUIZ ─── */
+function startQuiz() {
+  if (!S.certifId) { toast('Sélectionnez d\'abord une certification'); return; }
+  const c = window.CERTIF_DATA[S.certifId];
+
+  S.score    = 0;
+  S.answered = 0;
+  S.idx      = 0;
+  S.selected = [];
+  S.locked   = false;
+  S.mistakes = [];
+
+  if (S.mode === 'mistakes') {
+    const errs = getStat(S.certifId).errors;
+    if (!errs.length) { toast('⚡ Aucune erreur sauvegardée'); return; }
+    S.questions = c.questions.filter(q => errs.includes(q.id));
+  } else if (S.mode === 'shuffle') {
+    S.questions = [...c.questions].sort(() => Math.random() - .5);
+  } else {
+    S.questions = [...c.questions];
+  }
+
+  document.getElementById('hudQTotal').textContent = S.questions.length;
+  document.getElementById('hudScore').textContent  = 0;
+
+  show('scrQuiz');
+  renderQ();
+}
+
+function replayErrors() {
+  S.mode = 'mistakes';
+  startQuiz();
+}
+
+/* ─── RENDER QUESTION ─── */
+function renderQ() {
+  stopTimer();
+  S.locked   = false;
+  S.selected = [];
+
+  const q   = S.questions[S.idx];
+  const num = S.idx + 1;
+  const tot = S.questions.length;
+
+  // Scroll top
+  document.getElementById('quizBody').scrollTo(0, 0);
+
+  // HUD
+  document.getElementById('hudQNum').textContent  = num;
+  document.getElementById('hudScore').textContent = S.score;
+  document.getElementById('hudBar').style.width   = (S.idx / tot * 100) + '%';
+
+  // Question
+  document.getElementById('qTopic').textContent = q.topic;
+  document.getElementById('qText').textContent  = q.text;
+
+  const badge = document.getElementById('qBadge');
+  if (q.type === 'multi') {
+    badge.textContent = `⬜ Sélectionner ${q.correct.length} réponse(s)`;
+    badge.classList.remove('hide');
+  } else {
+    badge.classList.add('hide');
+  }
+
+  // Options
+  const LTRS = 'ABCDEF';
+  const list = document.getElementById('optsList');
+  list.innerHTML = '';
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.dataset.i = i;
+    if (S.mode === 'review' && q.correct.includes(i)) btn.classList.add('rev');
+    btn.innerHTML = `
+      <div class="opt-ltr">${LTRS[i]}</div>
+      <div class="opt-txt">${opt}</div>
+      ${q.type==='multi'?'<div class="opt-chk">✓</div>':''}
+    `;
+    btn.onclick = () => handleOpt(i, q);
+    list.appendChild(btn);
+  });
+
+  // Reset feedback
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+
+  // Buttons
+  document.getElementById('btnValidate').classList.remove('hide');
+  document.getElementById('btnValidate').textContent = 'Valider la réponse';
+  document.getElementById('btnNext').classList.add('hide');
+
+  // Fav
+  updateFavBtn();
+
+  // Timer
+  if (S.timerOn) startTimer();
+}
+
+/* ─── OPTION CLICK ─── */
+function handleOpt(i, q) {
+  if (S.locked) return;
+  const btns = document.querySelectorAll('.opt');
+
+  if (q.type === 'single') {
+    btns.forEach(b => {
+      b.classList.remove('sel');
+      if (S.mode==='review' && q.correct.includes(+b.dataset.i)) b.classList.add('rev');
+    });
+    btns[i].classList.add('sel');
+    btns[i].classList.remove('rev');
+    S.selected = [i];
+  } else {
+    const pos = S.selected.indexOf(i);
+    if (pos === -1) {
+      if (S.selected.length >= q.correct.length) { toast(`Sélectionner exactement ${q.correct.length} réponse(s)`); return; }
+      S.selected.push(i);
+      btns[i].classList.add('sel');
+      btns[i].classList.remove('rev');
+      const chk = btns[i].querySelector('.opt-chk');
+      if (chk) chk.style.color = 'var(--accent)';
+    } else {
+      S.selected.splice(pos, 1);
+      btns[i].classList.remove('sel');
+      if (S.mode==='review' && q.correct.includes(i)) btns[i].classList.add('rev');
+      const chk = btns[i].querySelector('.opt-chk');
+      if (chk) chk.style.color = 'transparent';
+    }
+  }
+}
+
+/* ─── VALIDATE ─── */
+function validate() {
+  if (S.selected.length === 0) { toast('Sélectionnez une réponse'); return; }
+
+  const q  = S.questions[S.idx];
+  const ok = [...S.selected].sort().toString() === [...q.correct].sort().toString();
+  S.locked = true;
+  S.answered++;
+  stopTimer();
+
+  if (ok) S.score++;
+  else { S.mistakes.push(q.id); pushErrors(S.certifId, [q.id]); }
+
+  // Style options
+  const LTRS  = 'ABCDEF';
+  const btns  = document.querySelectorAll('.opt');
+  btns.forEach(b => {
+    b.disabled = true;
+    b.classList.add('locked');
+    const i = +b.dataset.i;
+    if (q.correct.includes(i)) { b.classList.add('correct'); b.classList.remove('sel','rev'); }
+    else if (S.selected.includes(i)) { b.classList.add('wrong'); b.classList.remove('sel'); }
+  });
+
+  // Feedback
+  const fb  = document.getElementById('feedback');
+  const ico = document.getElementById('fbIco');
+  const msg = document.getElementById('fbMsg');
+  const corrLtrs = q.correct.map(i => LTRS[i]).join(', ');
+
+  if (ok) {
+    fb.className = 'feedback ok show';
+    ico.textContent = '✅';
+    msg.innerHTML   = '<strong>Correct !</strong>';
+  } else {
+    fb.className = 'feedback ko show';
+    ico.textContent = '❌';
+    msg.innerHTML   = `<strong>Incorrect</strong><small>Bonne(s) réponse(s) : ${corrLtrs}</small>`;
+  }
+
+  document.getElementById('hudScore').textContent = S.score;
+  document.getElementById('btnValidate').classList.add('hide');
+  const nxt = document.getElementById('btnNext');
+  nxt.classList.remove('hide');
+  nxt.textContent = S.idx === S.questions.length - 1 ? '🏁 Voir les résultats' : 'Question suivante →';
+}
+
+/* ─── NEXT ─── */
+function next() {
+  S.idx++;
+  if (S.idx >= S.questions.length) showResults();
+  else renderQ();
+}
+
+/* ─── TIMER ─── */
+function startTimer() {
+  S.timerLeft = S.timerSecs;
+  const el = document.getElementById('hudTimer');
+  el.classList.remove('hide','warn','danger');
+  updateTimerDisplay();
+  S.timerRef = setInterval(() => {
+    S.timerLeft--;
+    updateTimerDisplay();
+    if (S.timerLeft <= 0) { stopTimer(); autoValidate(); }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(S.timerRef);
+  document.getElementById('hudTimer').classList.add('hide');
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('hudTimer');
+  el.classList.remove('hide');
+  const m  = Math.floor(S.timerLeft / 60).toString().padStart(2,'0');
+  const s  = (S.timerLeft % 60).toString().padStart(2,'0');
+  el.textContent = `${m}:${s}`;
+  el.classList.toggle('warn',   S.timerLeft <= 20 && S.timerLeft > 10);
+  el.classList.toggle('danger', S.timerLeft <= 10);
+}
+
+function autoValidate() {
+  if (S.selected.length === 0) {
+    // Force a wrong answer by selecting nothing — just lock & mark wrong
+    const q = S.questions[S.idx];
+    S.locked = true; S.answered++;
+    S.mistakes.push(q.id); pushErrors(S.certifId, [q.id]);
+    const LTRS = 'ABCDEF';
+    const btns = document.querySelectorAll('.opt');
+    btns.forEach(b => {
+      b.disabled = true; b.classList.add('locked');
+      if (q.correct.includes(+b.dataset.i)) { b.classList.add('correct'); b.classList.remove('rev'); }
+    });
+    const fb  = document.getElementById('feedback');
+    fb.className = 'feedback ko show';
+    document.getElementById('fbIco').textContent = '⏰';
+    document.getElementById('fbMsg').innerHTML   = `<strong>Temps écoulé !</strong><small>Bonne(s) : ${q.correct.map(i=>LTRS[i]).join(', ')}</small>`;
+    document.getElementById('btnValidate').classList.add('hide');
+    const nxt = document.getElementById('btnNext');
+    nxt.classList.remove('hide');
+    nxt.textContent = S.idx === S.questions.length-1 ? '🏁 Voir les résultats' : 'Question suivante →';
+  } else {
+    validate();
+  }
+}
+
+/* ─── EXIT ─── */
+function confirmExit() {
+  stopTimer();
+  if (confirm('Quitter le quiz ? La progression sera perdue.')) {
+    if (S.mistakes.length) pushErrors(S.certifId, S.mistakes);
+    show('scrHome');
+    buildHome();
+  } else {
+    // Resume timer if it was running
+    if (S.timerOn && !S.locked) startTimer();
+  }
+}
+
+/* ─── RESULTS ─── */
+function showResults() {
+  const total = S.questions.length;
+  const pct   = Math.round(S.score / total * 100);
+  saveStat(S.certifId, S.score, total);
+
+  const circ = 389.6;
+  const arc  = document.getElementById('resArc');
+  arc.style.transition = 'none';
+  arc.style.strokeDashoffset = circ;
+  const color = pct >= 80 ? 'var(--green)' : pct >= 60 ? 'var(--accent)' : 'var(--red)';
+  arc.style.stroke = color;
+  document.getElementById('resPct').style.color = color;
+
+  setTimeout(() => {
+    arc.style.transition = 'stroke-dashoffset 1s cubic-bezier(.4,0,.2,1)';
+    arc.style.strokeDashoffset = circ - (pct/100) * circ;
+  }, 80);
+
+  document.getElementById('resPct').textContent = pct + '%';
+
+  const grade = pct >= 80 ? ['🎉 Excellent !', 'Vous êtes prêt pour l\'examen !']
+              : pct >= 60 ? ['👍 Bien joué',    'Révisez les erreurs pour progresser']
+              :             ['💪 À retravailler','Utilisez le mode ⚡ Erreurs pour cibler les failles'];
+
+  document.getElementById('resTitle').textContent = grade[0];
+  document.getElementById('resSub').textContent   = grade[1];
+  document.getElementById('resC').textContent     = S.score;
+  document.getElementById('resW').textContent     = total - S.score;
+  document.getElementById('resT').textContent     = total;
+
+  buildHome(); // refresh home stats
+  show('scrResults');
+}
+
+/* ─── TOAST ─── */
+let _toastT;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_toastT);
+  _toastT = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+/* ─── BOOT ─── */
+initTheme();
+buildHome();
+</script>
+</body>
+</html>
